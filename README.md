@@ -27,6 +27,7 @@ cannot poison answers used for routing decisions.
 - `scripts/remove.sh` - removes runtime rules created by this package.
 - `scripts/verify-render-local.sh` - verifies template rendering without root.
 - `systemd/*.service`, `systemd/*.timer` - optional boot and daily GeoIP update.
+- `docs/pitfalls.md` - non-obvious implementation notes and troubleshooting hints.
 
 ## Install on the VPS
 
