@@ -1,0 +1,13 @@
+[Unit]
+Description=WireGuard RU split routing
+Wants=network-online.target wg-quick@wg0.service wg-quick@wg1.service
+After=network-online.target wg-quick@wg0.service wg-quick@wg1.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/opt/splitvpn/scripts/apply.sh
+ExecStop=/opt/splitvpn/scripts/remove.sh
+
+[Install]
+WantedBy=multi-user.target

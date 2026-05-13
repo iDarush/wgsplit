@@ -1,0 +1,9 @@
+[Unit]
+Description=Update RU GeoIP nftables set
+After=network-online.target splitvpn.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/splitvpn/scripts/update-ru-geoip.sh
+

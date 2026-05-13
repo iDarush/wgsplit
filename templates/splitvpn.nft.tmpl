@@ -1,0 +1,62 @@
+#!/usr/sbin/nft -f
+
+table inet splitvpn {
+  set ru_domain_v4 {
+    type ipv4_addr
+    flags interval,timeout
+    timeout 6h
+    auto-merge
+  }
+
+  set ru_geoip_v4 {
+    type ipv4_addr
+    flags interval
+    auto-merge
+  }
+
+  set force_ru_v4 {
+    type ipv4_addr
+    flags interval
+    auto-merge
+  }
+
+  set force_fi_v4 {
+    type ipv4_addr
+    flags interval
+    auto-merge
+  }
+
+  chain prerouting_mark {
+    type filter hook prerouting priority -140; policy accept;
+
+    iifname "__WG_IN_IF__" meta mark != __WG_MARK__ ip daddr @ru_domain_v4 meta mark set __RU_MARK__
+    iifname "__WG_IN_IF__" meta mark != __WG_MARK__ ip daddr @ru_geoip_v4 meta mark set __RU_MARK__
+    iifname "__WG_IN_IF__" meta mark != __WG_MARK__ ip daddr @force_ru_v4 meta mark set __RU_MARK__
+    iifname "__WG_IN_IF__" ip daddr @force_fi_v4 meta mark set __WG_MARK__
+    iifname "__WG_IN_IF__" meta mark 0 meta mark set __WG_MARK__
+  }
+
+  chain forward_filter {
+    type filter hook forward priority filter; policy drop;
+
+    ct state established,related accept
+    iifname "__WG_IN_IF__" oifname "__WG_OUT_IF__" accept
+    iifname "__WG_IN_IF__" oifname "__WAN_IF__" accept
+  }
+}
+
+table ip splitvpn_nat {
+  chain postrouting_nat {
+    type nat hook postrouting priority srcnat; policy accept;
+
+    oifname "__WG_OUT_IF__" masquerade
+    oifname "__WAN_IF__" masquerade
+  }
+}
+
+table ip splitvpn_dns {
+  chain prerouting_dns {
+    type nat hook prerouting priority dstnat; policy accept;
+__DNS_REDIRECT_RULES__
+  }
+}
