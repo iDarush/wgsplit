@@ -29,6 +29,7 @@ need_cmd nft
 need_cmd sysctl
 need_cmd dnsmasq
 
+"${BASE_DIR}/scripts/ensure-wireguard-configs.sh"
 "${BASE_DIR}/scripts/render-configs.sh"
 DNS_BACKEND="$(cat "$GENERATED_DIR/dns-set-backend")"
 

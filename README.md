@@ -18,6 +18,7 @@ cannot poison answers used for routing decisions.
 - `templates/splitvpn.nft.tmpl` - nftables template.
 - `scripts/install.sh` - copies files to `/opt/splitvpn` and `/etc/splitvpn`.
 - `scripts/install-packages-ubuntu.sh` - installs Ubuntu package dependencies.
+- `scripts/ensure-wireguard-configs.sh` - creates missing `wg0.conf`/`wg1.conf` from env.
 - `scripts/apply.sh` - renders configs, applies routes, rules, nftables, dnsmasq.
 - `scripts/update-ru-geoip.sh` - downloads RU IPv4 CIDRs and loads the nft set.
 - `scripts/update-manual-rules.sh` - loads manual force-RU and force-FI IP/CIDR overrides.
@@ -36,9 +37,16 @@ cd wireguard-split-ru
 sudo bash scripts/install-packages-ubuntu.sh
 sudo bash scripts/install.sh
 sudo nano /etc/splitvpn/splitvpn.env
+sudo bash /opt/splitvpn/scripts/ensure-wireguard-configs.sh
+sudo systemctl enable --now wg-quick@wg0.service wg-quick@wg1.service
 sudo bash /opt/splitvpn/scripts/apply.sh
 sudo bash /opt/splitvpn/scripts/update-ru-geoip.sh
 ```
+
+`ensure-wireguard-configs.sh` never overwrites existing WireGuard configs. If
+`wg1.conf` is missing and `WG1_PRIVATE_KEY` is empty, it generates a new server
+private key locally and prints the public key. `wg0.conf` is generated only when
+the FI peer data and RU private key are present in `/etc/splitvpn/splitvpn.env`.
 
 ## Manual overrides
 
