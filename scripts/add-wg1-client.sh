@@ -3,7 +3,7 @@ set -euo pipefail
 
 usage() {
   echo "Usage: $0 <client-name> <client-ip-cidr> [endpoint]" >&2
-  echo "Example: $0 darush_iphone_split 10.40.0.3/32 194.113.35.230:51821" >&2
+  echo "Example: $0 darush_iphone_split 10.40.0.3/32 234.234.234.234:51821" >&2
 }
 
 if [[ "${1:-}" == "" || "${2:-}" == "" ]]; then

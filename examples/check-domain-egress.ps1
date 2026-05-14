@@ -3,7 +3,7 @@ param(
   [string]$Domain,
 
   [string]$DnsServer = "10.40.0.1",
-  [string]$SshTarget = "user1@194.113.35.230",
+  [string]$SshTarget = "user@234.234.234.234",
   [string]$RemoteScript = "/opt/splitvpn/scripts/check-domain-egress.sh"
 )
 
